@@ -17,6 +17,8 @@ class ComplexNumber{
   ComplexNumber operator-(const ComplexNumber& obj) const;
   ComplexNumber operator*(const ComplexNumber& obj) const;
 
+  double module() const;
+
   //[[nodiscard]]
   double magnitude() const;
 
