@@ -20,6 +20,10 @@ smth::ComplexNumber smth::ComplexNumber::operator*(const ComplexNumber& obj) con
   return new_obj;
 }
 
+double smth::ComplexNumber::module() const{
+  return sqrt(num1 * num1 + num2 * num2);
+}
+
 double smth::ComplexNumber::magnitude() const{
   if(num1 > num2){
     return num1 * std::sqrt(1 + (num2 * num2) / (num1 * num1));
