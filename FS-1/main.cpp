@@ -1,6 +1,6 @@
 #include <iostream>
 
-void print_file(char *name) {
+void cat(char *name) {
   FILE *f = fopen(name, "rt");
 
   if (f != NULL) {
@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     std::cout << "error" << std::endl;
   }
   for (int i = 1; i < argc; ++i){
-    print_file(argv[i]);
+    cat(argv[i]);
   }
   return 0;
 }
