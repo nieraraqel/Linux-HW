@@ -13,7 +13,7 @@ void cat(char *name) {
     printf("Error\n");
     exit(errno);
   }
-  char* buffer = (char*)malloc(BUFFER_SIZE);
+  char* buffer = (char*)malloc(BUFFER_SIZE + 1);
   long readBytes = 0;
 
   while(true){
