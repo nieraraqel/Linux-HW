@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 4097
+#define BUFFER_SIZE 4096
 
 void cat(char *name) {
   int file = open(name, O_RDONLY);
