@@ -25,7 +25,7 @@ void copy(char *source, char *destination) {
 
   long readBytes = 0;
 
-  while(1 == 1){
+  while(true){
     readBytes = read(sourceFd, buffer, BUFFER_SIZE);
     if(readBytes == -1){
       printf("Error\n");
