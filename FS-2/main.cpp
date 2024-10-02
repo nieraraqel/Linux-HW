@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SIZE 4097
+#define BUFFER_SIZE 4096
 
 void copy(char *source, char *destination) {
   int sourceFd = open(source, O_RDONLY);
