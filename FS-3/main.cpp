@@ -9,7 +9,7 @@
 
 #define BUFFER_SIZE 4096
 
-void copy(char *source) {
+void deletefunc(char *source) {
   int sourceFd = open(source, O_RDWR);
   if(sourceFd == -1){
     printf("Error2\n");
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
   if (argc != 2){
     printf("Error\n");
   }
-  copy(argv[1]);
+  deletefunc(argv[1]);
 
   return 0;
 }
