@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 
   off_t fileSize = lseek(sourceFd, 0, SEEK_END);
 
-  std::cout << "Successfully copied " << fileSize << " bytes (data: " << fileSize - holeBytes - 1 << ", hole: " << holeBytes + 1 << ")." << std::endl;
+  std::cout << "Successfully copied " << fileSize << " bytes (data: " << fileSize - holeBytes << ", hole: " << holeBytes << ")." << std::endl;
 
   close(sourceFd);
   close(destinationFd);
