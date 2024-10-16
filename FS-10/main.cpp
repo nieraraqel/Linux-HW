@@ -11,8 +11,8 @@
 
 int main(int argc, char** argv){
 
-  if(argc == 2){
-    std::cerr << "Missing filename argument" << std::endl;
+  if(argc != 3){
+    std::cerr << "Missing filename arguments or there are more than 2 arguments " << std::endl;
     exit(1);
   }
 
@@ -33,37 +33,67 @@ int main(int argc, char** argv){
     exit(errno);
   }
 
-  char *buffer = (char*)malloc(BUFFER_SIZE + 1);
   long readBytes = 0;
+  int offset = 0;
 
   off_t totalBytes = 0;
   off_t holeBytes = 0;
 
   while(true){
-    readBytes = read(sourceFd, buffer, BUFFER_SIZE);
+    off_t holeOffset = lseek(sourceFd, offset, SEEK_HOLE);
 
-    if(readBytes < 0){
+    if (holeOffset < 0) {
+      if(errno == ENXIO){
+        break;
+      }
       std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
       exit(errno);
     }
 
-    if(readBytes == 0){
+    if (holeOffset > offset) {
+      off_t holeSize = holeOffset - offset;
+
+      if (lseek(destinationFd, offset, SEEK_SET) == -1) {
+        std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
+        exit(errno);
+      }
+      char* buffer = (char*)malloc(holeSize);
+
+      if (write(destinationFd, buffer, holeSize) != holeSize) {
+        std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
+        free(buffer);
+        exit(errno);
+      }
+
+      holeBytes += holeSize;
+
+      free(buffer);
+    }
+
+
+    lseek(sourceFd, holeOffset, SEEK_DATA);
+
+    char* buffer = (char*)malloc(BUFFER_SIZE);
+
+    readBytes = read(sourceFd, buffer, BUFFER_SIZE);
+
+    if(readBytes < 0) {
+      std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
+      exit(errno);
+    }
+
+    if(readBytes == 0) {
       break;
     }
 
-    for (int i = 0; i < readBytes; ++i) {
-      if (buffer[i] == '\0') {
-        holeBytes++;
-      }
-    }
-
-    long writeBytes = write(destinationFd, buffer, (size_t)readBytes);
-
-    if(writeBytes == -1){
+    if (write(destinationFd, buffer, readBytes) != readBytes) {
       std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
       exit(errno);
     }
 
+    offset = holeOffset + readBytes;
+
+    free(buffer);
   }
 
   off_t fileSize = lseek(sourceFd, 0, SEEK_END);
@@ -75,8 +105,6 @@ int main(int argc, char** argv){
 
   close(sourceFd);
   close(destinationFd);
-
-  free(buffer);
 
   return 0;
 }
