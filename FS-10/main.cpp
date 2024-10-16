@@ -65,7 +65,7 @@ int main(int argc, char** argv){
         exit(errno);
       }
 
-      holeBytes += holeSize;
+      holeBytes += offset;
 
       free(buffer);
     }
@@ -97,11 +97,8 @@ int main(int argc, char** argv){
   }
 
   off_t fileSize = lseek(sourceFd, 0, SEEK_END);
-  if (fileSize > totalBytes) {
-    holeBytes += fileSize - totalBytes;
-  }
 
-  std::cout << "Successfully copied " << totalBytes << " bytes (data: " << totalBytes - holeBytes << ", hole: " << holeBytes << ")." << std::endl;
+  std::cout << "Successfully copied " << fileSize << " bytes (data: " << fileSize - holeBytes - 1 << ", hole: " << holeBytes + 1 << ")." << std::endl;
 
   close(sourceFd);
   close(destinationFd);
