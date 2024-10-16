@@ -42,9 +42,13 @@ int main(int argc, char** argv){
   while(true){
     readBytes = read(sourceFd, buffer, BUFFER_SIZE);
 
-    if(readBytes == 0){
+    if(readBytes < 0){
       std::cerr << "Something went wrong. " << strerror(errno) << std::endl;
       exit(errno);
+    }
+
+    if(readBytes == 0){
+      break;
     }
 
     for (int i = 0; i < readBytes; ++i) {
